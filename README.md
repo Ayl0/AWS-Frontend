@@ -1,4 +1,4 @@
-### Real-Time Environmental Data Aggregation and Analysis Platform
+# Real-Time Environmental Data Aggregation and Analysis Platform
 
 # System Overview
 
