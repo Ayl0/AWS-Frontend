@@ -1,3 +1,5 @@
+### Real-Time Environmental Data Aggregation and Analysis Platform
+
 # System Overview
 
 The Real-Time Environmental Data Aggregation and Analysis Platform is a high-performance, cloud-powered application focused on collecting, analyzing, and visualizing environmental data. The platform continuously gathers weather and air quality metrics from multiple sources, such as IQAir and OpenAQ, across different regions and cities around the world. By transforming this data into actionable insights, the platform allows users to analyze complex environmental patterns and view trends through detailed visualizations.
