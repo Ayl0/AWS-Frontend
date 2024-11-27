@@ -66,19 +66,25 @@ Data Volume: Processes around 5-10 MB of data per hour, ensuring efficient manag
 
 
 # 1. Real-Time Dashboard
-Purpose: Provide users with an overview of current environmental conditions globally and in their selected regions.
-Key Features:
+Provides users with an overview of current environmental conditions globally and in their selected regions.
+### Key Features:
 Interactive Map: A global map highlighting air quality index (AQI) and weather metrics in different regions. Users can zoom in on specific cities or regions.
+
 Real-Time Metrics: Display current temperature, humidity, AQI, and major pollutants (e.g., PM2.5, CO2) in a concise, visually appealing manner.
+
 Alerts Section: Highlight anomalies like dangerously high AQI or sudden temperature spikes with warnings. (Maybe)
+
 Customization: Allow users to toggle specific metrics (e.g., only air quality or weather) based on their preferences.
 
 # 2. Historical Trends and Insights
-Purpose: Enable users to analyze long-term environmental trends and draw actionable insights.
-Key Features:
+Enables users to analyze long-term environmental trends and draw actionable insights.
+### Key Features:
 Date Range Selector: Users can choose specific time periods to visualize data trends (e.g., monthly, yearly, or custom date ranges).
+
 Graphical Analysis Tools: Line graphs, bar charts, and scatter plots comparing various metrics (e.g., AQI trends vs. temperature).
+
 Comparison Feature: Compare trends across multiple regions or cities to identify geographical variations in environmental data.
+
 Export Options: Provide options to export data and visualizations as CSV or PNG files for offline analysis. (Maybe)
 
 
