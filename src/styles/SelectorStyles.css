@@ -1,0 +1,116 @@
+/* Dark Theme Inspired Styling */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Poppins:wght@300;400;600&display=swap');
+
+/* Background and Font */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #1e1e2e, #28293e);
+  color: #d1d5db;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container Styling */
+.revamped-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #1e293b;
+  border-radius: 15px;
+  padding: 20px 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  color: #f3f4f6;
+}
+
+/* Title */
+.revamped-title {
+  font-size: 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 500;
+  text-align: center;
+  color: #66a6ff;
+  margin-bottom: 20px;
+}
+
+/* Labels */
+.revamped-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+  color: #94a3b8;
+}
+
+/* Dropdown Styling */
+.revamped-dropdown {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #1e2530;
+  color: #d1d5db;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  height: 120px;
+  overflow-y: auto;
+}
+
+.revamped-dropdown option {
+  padding: 8px 10px;
+  background: #1e2530;
+  color: #cbd5e1;
+}
+
+.revamped-dropdown option:hover {
+  background: #39414f;
+  color: #66a6ff;
+}
+
+/* Date Picker Styling */
+.date-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.date-picker-container {
+  flex: 1;
+}
+
+.revamped-date-picker {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: #1e2530;
+  color: #cbd5e1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  cursor: pointer;
+}
+
+.revamped-date-picker:focus {
+  outline: 2px solid #66a6ff;
+}
+
+/* Hover Effects */
+.revamped-dropdown:hover,
+.revamped-date-picker:hover {
+  background: #39414f;
+  color: #66a6ff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .date-section {
+    flex-direction: column;
+  }
+
+  .revamped-title {
+    font-size: 20px;
+  }
+}

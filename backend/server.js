@@ -1,11 +1,15 @@
 import express from 'express';
 import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Configure AWS SDK
 AWS.config.update({
@@ -50,6 +54,7 @@ const fetchData = async (city, startDate, endDate) => {
       };
 
       const data = await dynamoDB.scan(params).promise();
+      console.log(data.items)
       results.push(...data.Items);
     }
 
