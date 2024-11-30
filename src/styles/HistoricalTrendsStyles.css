@@ -124,4 +124,43 @@
     margin-bottom: 10px;
     text-align: center;
   }
-  
+
+  /* Styling for the export options container */
+.export-options {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #1e293b; /* Dark background for contrast */
+  border-radius: 8px;
+}
+
+/* Styling for export buttons */
+.export-options button {
+  background-color: #4f46e5; /* Indigo color for the buttons */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.export-options button:hover {
+  background-color: #4338ca; /* Slightly darker indigo on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
+}
+
+.export-options button:active {
+  transform: translateY(0); /* Reset lift effect on click */
+  background-color: #3730a3; /* Even darker indigo on click */
+}
+
+.export-options button:disabled {
+  background-color: #6b7280; /* Gray color for disabled state */
+  cursor: not-allowed;
+}

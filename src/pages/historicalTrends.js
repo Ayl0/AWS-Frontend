@@ -37,8 +37,9 @@ const HistoricalTrends = () => {
   const [data, setData] = useState([]);
   const [tempGraphType, setTempGraphType] = useState("line");
   const [aqiGraphType, setAqiGraphType] = useState("line");
+  const [humidityGraphType, setHumidityGraphType] = useState("line");
+  const [pressureGraphType, setPressureGraphType] = useState("line");
   const [isLoading, setIsLoading] = useState(false);
-
   
 
   useEffect(() => {
@@ -165,6 +166,40 @@ const HistoricalTrends = () => {
     ],
   };
 
+  const humidityChartData = {
+    labels: data.map((item) => item.PollutionTimestamp),
+    datasets: [
+      {
+        label: "Humidity (%)",
+        data: data.map((item) => item.Humidity),
+        borderColor: "rgba(54, 162, 235, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        borderWidth: 3,
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: "rgba(54, 162, 235, 1)",
+      },
+    ],
+  };
+  
+  const pressureChartData = {
+    labels: data.map((item) => item.PollutionTimestamp),
+    datasets: [
+      {
+        label: "Pressure (hPa)",
+        data: data.map((item) => item.Pressure),
+        borderColor: "rgba(255, 206, 86, 1)",
+        backgroundColor: "rgba(255, 206, 86, 0.2)",
+        borderWidth: 3,
+        tension: 0.4,
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        pointBackgroundColor: "rgba(255, 206, 86, 1)",
+      },
+    ],
+  };
+
   const renderChart = (chartType, chartData) => {
     switch (chartType) {
       case "line":
@@ -186,11 +221,14 @@ const HistoricalTrends = () => {
         selectedCities={selectedCities}
         setSelectedCities={setSelectedCities}
       />
-
+  
       {isLoading && <p className="loading-text">Loading data...</p>}
-
+  
       {!isLoading && data.length > 0 ? (
+        
         <div className="graphs-container">
+          
+          {/* Temperature Graph */}
           <div className="graph-section large-graph">
             <h3 className="graph-title">Temperature Trends</h3>
             <p className="graph-subtitle">{selectedCities.join(", ")}</p>
@@ -206,7 +244,8 @@ const HistoricalTrends = () => {
               {renderChart(tempGraphType, tempChartData)}
             </div>
           </div>
-
+  
+          {/* AQI Graph */}
           <div className="graph-section large-graph">
             <h3 className="graph-title">Air Quality Index (AQI)</h3>
             <p className="graph-subtitle">{selectedCities.join(", ")}</p>
@@ -222,12 +261,48 @@ const HistoricalTrends = () => {
               {renderChart(aqiGraphType, aqiChartData)}
             </div>
           </div>
+  
+          {/* Humidity Graph */}
+        <div className="graph-section large-graph">
+          <h3 className="graph-title">Humidity Trends</h3>
+          <p className="graph-subtitle">{selectedCities.join(", ")}</p>
+          <select
+            className="graph-type-selector"
+            value={humidityGraphType}
+            onChange={(e) => setHumidityGraphType(e.target.value)}
+          >
+            <option value="line">Line Chart</option>
+            <option value="bar">Bar Chart</option>
+          </select>
+          <div className="chart-wrapper">
+            {renderChart(humidityGraphType, humidityChartData)}
+          </div>
         </div>
+
+        {/* Pressure Graph */}
+        <div className="graph-section large-graph">
+          <h3 className="graph-title">Pressure Trends</h3>
+          <p className="graph-subtitle">{selectedCities.join(", ")}</p>
+          <select
+            className="graph-type-selector"
+            value={pressureGraphType}
+            onChange={(e) => setPressureGraphType(e.target.value)}
+          >
+            <option value="line">Line Chart</option>
+            <option value="bar">Bar Chart</option>
+          </select>
+          <div className="chart-wrapper">
+            {renderChart(pressureGraphType, pressureChartData)}
+          </div>
+        </div>
+      </div>
+
       ) : (
         !isLoading && <p className="no-data-text">No data available for the selected range.</p>
       )}
     </div>
   );
+  
 };
 
 export default HistoricalTrends;
