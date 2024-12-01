@@ -35,38 +35,47 @@ const HistoricalTrends = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [selectedCities, setSelectedCities] = useState(["Karachi"]);
   const [data, setData] = useState([]);
+  const [latestData, setLatestData] = useState(null); // New state for latest data
   const [tempGraphType, setTempGraphType] = useState("line");
   const [aqiGraphType, setAqiGraphType] = useState("line");
   const [isLoading, setIsLoading] = useState(false);
 
-  
-
   useEffect(() => {
-
     const fetchData = async () => {
-        if (!selectedCities.length) return;
-    
-        const cityQuery = selectedCities.length > 1 ? "all" : selectedCities[0];
-        const start = startDate.toISOString().split("T")[0];
-        const end = endDate.toISOString().split("T")[0];
-    
-        try {
-          setIsLoading(true);
-          const response = await fetch(`${BASE_URL}/fetch-data/${cityQuery}/${start}/${end}`);
-          const result = await response.json();
-    
-          if (result.success) {
-            setData(result.data);
-          } else {
-            console.error("Error fetching data:", result.message);
-            setData([]);
-          }
-        } catch (error) {
-          console.error("Fetch error:", error);
+      if (!selectedCities.length) return;
+
+      const cityQuery = selectedCities.length > 1 ? "all" : selectedCities[0];
+      const start = startDate.toISOString().split("T")[0];
+      const end = endDate.toISOString().split("T")[0];
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${BASE_URL}/fetch-data/${cityQuery}/${start}/${end}`);
+        const latestDataResponse = await fetch(`${BASE_URL}/latest-data/${cityQuery}`);
+
+        const result = await response.json();
+        const latestResult = await latestDataResponse.json();
+
+        if (result.success) {
+          setData(result.data);
+        } else {
+          console.error("Error fetching data:", result.message);
           setData([]);
-        } finally {
-          setIsLoading(false);
         }
+
+        if (latestResult.success) {
+          setLatestData(latestResult.data[0]); // Store the latest data
+        } else {
+          console.error("Error fetching latest data:", latestResult.message);
+          setLatestData(null);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        setData([]);
+        setLatestData(null);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
@@ -226,8 +235,36 @@ const HistoricalTrends = () => {
       ) : (
         !isLoading && <p className="no-data-text">No data available for the selected range.</p>
       )}
+
+      {/* Display the latest data section */}
+      {!isLoading && latestData && (
+        <div className="latest-data-section">
+          <h3 className="latest-data-title">Latest Data for {selectedCities.join(", ")}</h3>
+          <ul className="latest-data-list">
+            <li><strong>AQI_US:</strong> {latestData.AQI_US}</li>
+            <li><strong>City:</strong> {latestData.City}</li>
+            <li><strong>Country:</strong> {latestData.Country}</li>
+            <li><strong>Humidity:</strong> {latestData.Humidity}</li>
+            <li><strong>Icon Code:</strong> {latestData.IconCode}</li>
+            <li><strong>Latitude:</strong> {latestData.Latitude}</li>
+            <li><strong>Longitude:</strong> {latestData.Longitude}</li>
+            <li><strong>Main Pollutant (US):</strong> {latestData.MainPollutantUS}</li>
+            <li><strong>Partition Key:</strong> {latestData.PartitionKey}</li>
+            <li><strong>Pollution Timestamp:</strong> {latestData.PollutionTimestamp}</li>
+            <li><strong>Pressure:</strong> {latestData.Pressure}</li>
+            <li><strong>Source:</strong> {latestData.Source}</li>
+            <li><strong>State:</strong> {latestData.State}</li>
+            <li><strong>Temperature:</strong> {latestData.Temperature}</li>
+            <li><strong>Wind Direction:</strong> {latestData.WindDirection}</li>
+            <li><strong>Wind Speed:</strong> {latestData.WindSpeed}</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
 
 export default HistoricalTrends;
+
+
+           

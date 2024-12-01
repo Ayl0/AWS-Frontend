@@ -13,7 +13,7 @@ app.use(cors());
 
 // Configure AWS SDK
 AWS.config.update({
-  region: process.env.AWS_REGION,
+  region: process.env.AWS_REGION || 'us-east-1',
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
@@ -30,10 +30,10 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
  */
 const fetchData = async (city, startDate, endDate) => {
   const allCities = [
-    "Abbottabad", "bahawalpur", "Charsadda", "Faislabad", "Haripur", 
-    "Islamabad", "Karachi", "Lahore", "Lodhran", "Mananwala", "mangla", 
-    "MohmandAgency", "Multan", "Peshawar", "Rawalpindi", "Rojhan", 
-    "Sialkot", "Sukkur"
+    "Abbottabad", "bahawalpur", "Charsadda", "Faislabad", "Haripur",
+    "Islamabad", "Karachi", "Lahore", "Lodhran", "Mananwala", "mangla",
+    "MohmandAgency", "Multan", "Peshawar", "Rawalpindi", "Rojhan",
+    "Sialkot", "Sukkur",
   ];
 
   const citiesToQuery = city ? [city] : allCities;
@@ -45,7 +45,7 @@ const fetchData = async (city, startDate, endDate) => {
         TableName: cityName,
         FilterExpression: "#ts BETWEEN :startDate AND :endDate",
         ExpressionAttributeNames: {
-          "#ts": "PollutionTimestamp",
+          "#ts": "WeatherTimestamp",
         },
         ExpressionAttributeValues: {
           ":startDate": startDate,
@@ -53,8 +53,17 @@ const fetchData = async (city, startDate, endDate) => {
         },
       };
 
+      // console.log("Query Parameters:", params);
+
       const data = await dynamoDB.scan(params).promise();
-      console.log(data.items)
+      // console.log(`Fetched Data for ${cityName}:`, data.Items);
+
+      data.Items.forEach(item => {
+        item.WeatherTimestamp = new Date(item.WeatherTimestamp);
+      });
+
+      data.Items.sort((a, b) => b.WeatherTimestamp - a.WeatherTimestamp);
+      // console.log(`Sorted Data for ${cityName}:`, data.Items[0]);
       results.push(...data.Items);
     }
 
@@ -65,22 +74,42 @@ const fetchData = async (city, startDate, endDate) => {
   }
 };
 
+//API enpoint to display the latest data
+app.get('/latest-data/:city', async (req, res) => {
+  const { city } = req.params;
+
+  try {
+    const data = await fetchData(city === "all" ? "" : city, new Date(0).toISOString(), new Date().toISOString());
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
 // API endpoint to fetch data using URL parameters
 app.get('/fetch-data/:city/:startDate/:endDate', async (req, res) => {
-    const { city, startDate, endDate } = req.params;
+  const { city, startDate, endDate } = req.params;
   
-    if (!startDate || !endDate) {
-      return res.status(400).json({ success: false, message: "Start date and end date are required." });
+  if (!startDate || !endDate) {
+    return res.status(400).json({ success: false, message: "Start date and end date are required." });
+  }
+
+  try {
+    const startDateObject = new Date(startDate);
+    const endDateObject = new Date(endDate);
+
+    if (isNaN(startDateObject.getTime()) || isNaN(endDateObject.getTime())) {
+      return res.status(400).json({ success: false, message: "Invalid date format." });
     }
-  
-    try {
-      const data = await fetchData(city === "all" ? "" : city, startDate, endDate);
-      res.json({ success: true, data });
-    } catch (error) {
-      res.status(500).json({ success: false, error: error.message });
-    }
-  });
-  
+
+    const data = await fetchData(city === "all" ? "" : city, startDateObject.toISOString(), endDateObject.toISOString());
+    // console.log(`Fetched Data for ${city} from ${startDate} to ${endDate}:`, data);
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 // Start the server
 app.listen(PORT, () => {
