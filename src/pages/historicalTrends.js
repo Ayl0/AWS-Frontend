@@ -43,17 +43,67 @@ const HistoricalTrends = () => {
   const [isLoading, setIsLoading] = useState(false);
   
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!selectedCities.length) return;
+  
+  //     const cityQuery = selectedCities.length > 1 ? "all" : selectedCities[0];
+  //     const start = startDate.toISOString().split("T")[0];
+  //     const end = endDate.toISOString().split("T")[0];
+  
+  //     try {
+  //       setIsLoading(true);
+  //       const response = await fetch(`${BASE_URL}/fetch-data/${cityQuery}/${start}/${end}`);
+  //       const latestDataResponse = await fetch(`${BASE_URL}/latest-data/${cityQuery}`);
+  
+  //       const result = await response.json();
+  //       const latestResult = await latestDataResponse.json();
+  
+  //       if (result.success) {
+  //         // Sort the fetched data by PollutionTimestamp
+  //         const sortedData = result.data.sort(
+  //           (a, b) => new Date(a.PollutionTimestamp) - new Date(b.PollutionTimestamp)
+  //         );
+  //         setData(sortedData);
+  //       } else {
+  //         console.error("Error fetching data:", result.message);
+  //         setData([]);
+  //       }
+  
+  //       if (latestResult.success) {
+  //         setLatestData(latestResult.data[0]); // Store the latest data
+  //       } else {
+  //         console.error("Error fetching latest data:", latestResult.message);
+  //         setLatestData(null);
+  //       }
+  //     } catch (error) {
+  //       console.error("Fetch error:", error);
+  //       setData([]);
+  //       setLatestData(null);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, [startDate, endDate, selectedCities]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedCities.length) return;
   
+      // Format the start and end dates for inclusivity
       const cityQuery = selectedCities.length > 1 ? "all" : selectedCities[0];
-      const start = startDate.toISOString().split("T")[0];
-      const end = endDate.toISOString().split("T")[0];
+      const start = new Date(startDate);
+      start.setHours(0, 0, 0, 0); // Ensure start date is at the beginning of the day
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59, 999); // Ensure end date is at the end of the day
   
       try {
         setIsLoading(true);
-        const response = await fetch(`${BASE_URL}/fetch-data/${cityQuery}/${start}/${end}`);
+        const response = await fetch(
+          `${BASE_URL}/fetch-data/${cityQuery}/${start.toISOString()}/${end.toISOString()}`
+        );
         const latestDataResponse = await fetch(`${BASE_URL}/latest-data/${cityQuery}`);
   
         const result = await response.json();
@@ -87,15 +137,13 @@ const HistoricalTrends = () => {
   
     fetchData();
   }, [startDate, endDate, selectedCities]);
+  
 
   const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleString("en-US", {
-      weekday: "short",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
+    // Remove the year, seconds, and PST
+    return timestamp
+      .replace(/^\d{4}-/, '') // Remove the year (any 4-digit number) and dash
+      .replace(/:00 PST$/, ''); // Remove seconds and 'PST'
   };
 
   const chartOptions = {
