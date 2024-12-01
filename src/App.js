@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Pages
 import HistoricalTrends from './pages/historicalTrends';
+import Header from './components/header';
 
 // Components
 
@@ -11,6 +12,7 @@ function App() {
       <BrowserRouter>
         
         {/* Application Routes */}
+        <Header />
         <div className="pages">
           <Routes>
             <Route path="/" element={<HistoricalTrends />} />

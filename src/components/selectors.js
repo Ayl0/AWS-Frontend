@@ -13,10 +13,10 @@ const allCities = [
 const CityAndDateSelector = ({ startDate, setStartDate, endDate, setEndDate, selectedCities, setSelectedCities }) => {
   return (
     <div className="revamped-container">
-      <h2 className="revamped-title">Analyze Air Quality Trends</h2>
+      {/* <h2 className="revamped-title">Analyze Air Quality Trends</h2> */}
 
       {/* City Selector */}
-      <div className="city-section">
+      {/* <div className="city-section">
         <label className="revamped-label">Select Cities</label>
         <select
           multiple
@@ -32,12 +32,15 @@ const CityAndDateSelector = ({ startDate, setStartDate, endDate, setEndDate, sel
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
 
       {/* Date Range Selector */}
       <div className="date-section">
-        <div className="date-picker-container">
-          <label className="revamped-label">Start Date</label>
+        <div 
+        style={{ marginLeft: "25vh" }}
+        className="date-picker-container">
+          <label 
+          className="revamped-label"><strong>Start Date</strong></label>
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
@@ -45,7 +48,7 @@ const CityAndDateSelector = ({ startDate, setStartDate, endDate, setEndDate, sel
           />
         </div>
         <div className="date-picker-container">
-          <label className="revamped-label">End Date</label>
+          <label className="revamped-label"><strong>End Date</strong></label>
           <DatePicker
             selected={endDate}
             onChange={(date) => setEndDate(date)}
