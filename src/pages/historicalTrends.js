@@ -46,26 +46,30 @@ const HistoricalTrends = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!selectedCities.length) return;
-
+  
       const cityQuery = selectedCities.length > 1 ? "all" : selectedCities[0];
       const start = startDate.toISOString().split("T")[0];
       const end = endDate.toISOString().split("T")[0];
-
+  
       try {
         setIsLoading(true);
         const response = await fetch(`${BASE_URL}/fetch-data/${cityQuery}/${start}/${end}`);
         const latestDataResponse = await fetch(`${BASE_URL}/latest-data/${cityQuery}`);
-
+  
         const result = await response.json();
         const latestResult = await latestDataResponse.json();
-
+  
         if (result.success) {
-          setData(result.data);
+          // Sort the fetched data by PollutionTimestamp
+          const sortedData = result.data.sort(
+            (a, b) => new Date(a.PollutionTimestamp) - new Date(b.PollutionTimestamp)
+          );
+          setData(sortedData);
         } else {
           console.error("Error fetching data:", result.message);
           setData([]);
         }
-
+  
         if (latestResult.success) {
           setLatestData(latestResult.data[0]); // Store the latest data
         } else {
@@ -80,7 +84,7 @@ const HistoricalTrends = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchData();
   }, [startDate, endDate, selectedCities]);
 
